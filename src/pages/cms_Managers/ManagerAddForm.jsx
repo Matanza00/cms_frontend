@@ -11,7 +11,7 @@ import Select from 'react-select';
 import UploadWidget from '../../components/UploadWidget';
 import {
   useAddManagerMutation,
-  useGetManagerByCompanyIdQuery,
+  useGetAllManagersWithoutPaginationQuery,
 } from '../../services/managerSlice';
 import { useGetCompanyEmployeesQuery } from '../../services/employeeSlice';
 import Async from 'react-select/async';
@@ -28,7 +28,7 @@ const ManagersAddForm = () => {
   const [formValues, setFormValues] = useState({ ...addManagerSchema });
   const { data: employees, isLoading: employeeLoading } =
     useGetCompanyEmployeesQuery(user?.companyId);
-  const { data: managers } = useGetManagerByCompanyIdQuery({
+  const { data: managers } = useGetAllManagersWithoutPaginationQuery({
     companyId: user?.companyId,
     station: formValues?.station,
   });

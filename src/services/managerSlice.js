@@ -2,75 +2,74 @@ import { apiSlice } from './apiSlice';
 
 const managerSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    // Get managers by CompanyId with pagination and search
-    GetManagerByCompanyId: builder.query({
+    getManagersByCompanyId: builder.query({
       query: ({ companyId, page, limit, searchTerm }) => {
-        let queryString = `/managers/company/${companyId}?page=${page}&limit=${limit}`;
+        let queryString = `/c-managers/company/${companyId}?page=${page}&limit=${limit}`;
         if (searchTerm) {
           queryString += `&search=${searchTerm}`;
         }
         return queryString;
       },
+      providesTags: (result, error, { companyId }) => [
+        { type: 'Manager', id: companyId },
+      ],
+    }),
+
+    getAllManagers: builder.query({
+      query: () => `/c-managers/`,
       providesTags: ['Manager'],
     }),
 
-    // Get All Managers
-    GetManagerAll: builder.query({
-      query: () => `/managers/`,
-      providesTags: ['Manager'],
+    getAllManagersWithoutPagination: builder.query({
+      query: ({ companyId }) => `/c-managers/company/${companyId}`,
+      providesTags: (result, error, { companyId }) => [
+        { type: 'Manager', id: companyId },
+      ],
     }),
 
-    // Get All Managers Without Pagination
-    GetManagerAllWithoutPagination: builder.query({
-      query: ({ companyId }) => `/managers/company/${companyId}`,
-      providesTags: ['Manager'],
+    getManager: builder.query({
+      query: (id) => `/c-managers/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Manager', id }],
     }),
 
-    // Get One Manager
-    GetManager: builder.query({
-      query: (id) => `/managers/${id}`,
-      providesTags: ['Manager'],
-    }),
-
-    // Add Manager
-    AddManager: builder.mutation({
+    addManager: builder.mutation({
       query: (formData) => ({
-        url: '/managers',
+        url: '/c-managers',
         method: 'POST',
         body: formData,
       }),
       invalidatesTags: ['Manager'],
     }),
 
-    // Update Manager
-    UpdateManager: builder.mutation({
+    updateManager: builder.mutation({
       query: ({ managerId, data }) => ({
-        url: `/managers/${managerId}`,
+        url: `/c-managers/${managerId}`,
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: ['Manager'],
+      invalidatesTags: (result, error, { managerId }) => [
+        { type: 'Manager', id: managerId },
+      ],
     }),
 
-    // Delete Manager
-    DeleteManager: builder.mutation({
+    deleteManager: builder.mutation({
       query: (id) => ({
-        url: `/managers/${id}`,
+        url: `/c-managers/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Manager'],
+      invalidatesTags: (result, error, id) => [{ type: 'Manager', id }],
     }),
   }),
 });
 
 export const {
-  useGetManagerByCompanyIdQuery,
-  useGetManagerAllQuery,
-  useGetManagerAllWithoutPaginationQuery,
+  useGetManagersByCompanyIdQuery,
+  useGetAllManagersQuery,
+  useGetAllManagersWithoutPaginationQuery,
   useGetManagerQuery,
   useAddManagerMutation,
   useUpdateManagerMutation,
   useDeleteManagerMutation,
 } = managerSlice;
 
-export default managerSlice; // Add this default export
+export default managerSlice;

@@ -10,12 +10,14 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CONSTANTS from '../../utils/constants';
 import {
-  useGetManagerByCompanyIdQuery,
+  useGetManagersByCompanyIdQuery,
+  useGetAllManagersWithoutPaginationQuery,
   useDeleteManagerMutation,
 } from '../../services/managerSlice';
 import DeleteModal from '../../components/DeleteModal';
 import Loader from '../../common/Loader';
 import PaginationComponent from '../../components/Pagination/Pagination';
+
 // import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import html2canvas from 'html2canvas';
 // import htmlDocx from 'html-docx-js';
@@ -40,7 +42,7 @@ const ManagersTable = ({ searchTerm, setSortedDataIndex }) => {
     error,
     isLoading: isManagersLoading,
     refetch,
-  } = useGetManagerByCompanyIdQuery({
+  } = useGetAllManagersWithoutPaginationQuery({
     companyId: user?.companyId,
     page,
     limit,

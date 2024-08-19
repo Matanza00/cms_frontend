@@ -5,7 +5,7 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { FiUser } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
-import { addcms_UserSchema } from '../../utils/schemas';
+import { addCmsUserSchema } from '../../utils/schemas';
 import { useGetRolesByCompanyIdQuery } from '../../services/rolesSlice';
 import useToast from '../../hooks/useToast';
 import { useAddCompanyUserMutation } from '../../services/usersSlice';
@@ -19,7 +19,7 @@ import BreadcrumbNav from '../../components/Breadcrumbs/BreadcrumbNav';
 const UserAddForm = () => {
   const navigate = useNavigate();
   const { showErrorToast, showSuccessToast } = useToast();
-  const [formValues, setFormValues] = useState({ ...addcms_UserSchema });
+  const [formValues, setFormValues] = useState({ ...addCmsUserSchema });
   const [selectedRole, setSelectedRole] = useState(null);
   const { user } = useSelector((state) => state.auth);
   const { eachUser } = useSelector((state) => state.user);
