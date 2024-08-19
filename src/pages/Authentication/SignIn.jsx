@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../store/authSlice';
 import useToast from '../../hooks/useToast';
-import SOSLogo from '../../images2/SOS_Logo_removebg.png';
+import SOSLogo from '../../images2/nxc.png';
 
 const SignIn = () => {
   const [login, setLogin] = useState({ email: '', password: '' });
@@ -42,20 +42,28 @@ const SignIn = () => {
     <div className="relative bg-gradient-to-br from-blue-800 via-purple-700 to-black h-screen flex flex-col justify-center items-center overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900 via-purple-900 to-black opacity-50 z-0"></div>
-        <img src={SOSLogo} alt="SOS Logo" className="w-2/3 h-2/3 opacity-10 object-contain z-0" />
+        <img
+          src={SOSLogo}
+          alt="SOS Logo"
+          className="w-2/3 h-2/3 opacity-10 object-contain z-0"
+        />
       </div>
       <div className="flex flex-wrap items-center z-10 w-full max-w-5xl mx-auto p-8">
         <div className="hidden xl:block xl:w-1/2 pr-10">
           <div className="text-center">
             <Link className="mb-5 inline-block" to="/">
               <h1 className="text-white text-3xl font-extrabold">
-                Fleet Management System
+                Clinic Management System
               </h1>
             </Link>
             <p className="text-white text-xl animate-bounce">
-              Track Your Vehicles!
+              Manage Your Data!
             </p>
-            <img src={SOSLogo} alt="SOS Logo" className="mt-0 w-80 h-80 mx-auto opacity-90" />
+            <img
+              src={SOSLogo}
+              alt="SOS Logo"
+              className="mt-0 w-80 h-80 mx-auto opacity-90"
+            />
           </div>
         </div>
         <div className="w-full xl:w-1/2 xl:border-l-2 border-gray-600 flex justify-center">
@@ -80,7 +88,8 @@ const SignIn = () => {
                   <span className="absolute right-4 top-4 text-gray-400">
                     <svg
                       className="fill-current"
-                      width="22"             viewBox="0 0 22 22"
+                      width="22"
+                      viewBox="0 0 22 22"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
@@ -138,7 +147,10 @@ const SignIn = () => {
                   {isLoading ? 'Loading...' : 'Login'}
                 </button>
                 {error && (
-                  <div className="alert alert-danger mt-4 text-red-500 text-center" role="alert">
+                  <div
+                    className="alert alert-danger mt-4 text-red-500 text-center"
+                    role="alert"
+                  >
                     {error}
                   </div>
                 )}

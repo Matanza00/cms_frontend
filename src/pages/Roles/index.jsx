@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Roles = () => {
   //const companyId = useSelector((state) => state.auth.user.companyId);
-const companyId = 26;
+  const companyId = 1;
   const { data, isError, isLoading } =
     useGetRolesAndPermissionsByCompanyIdQuery(companyId);
   const navigate = useNavigate();

@@ -3,7 +3,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import Logo from '../../images/logo/logo.svg';
 import nxc from '../../images2/nxc.png';
-import nxcwhite from '../../images2/nxcwhite.png'; 
+import nxcwhite from '../../images2/nxcwhite.png';
 import { GoOrganization } from 'react-icons/go';
 import { HiUserGroup } from 'react-icons/hi2';
 import { MdOutlineDashboard, MdLogout } from 'react-icons/md';
@@ -121,12 +121,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true',
   );
   let adminRole =
-    user.Role.roleName == 'companyAdmin' ||
-    user.Role.roleName == 'Maintenance Admin';
-  
-  let superRole = user.Role.roleName == 'SuperAdmin';
-  let ManagerRole = user.Role.roleName == 'Manager' && user.Role.roleName == 'SuperAdmin';
-  let DoctorRole =  user.Role.roleName == 'Doctor' && user.Role.roleName == 'Manager' && user.Role.roleName == 'SuperAdmin';
+    user.Role.roleName == 'companyAdmin' || user.Role.roleName == 'superAdmin';
+
+  let superRole =
+    user.Role.roleName == 'superAdmin' || user.Role.roleName == 'companyAdmin';
+  let ManagerRole =
+    user.Role.roleName == 'Manager' && user.Role.roleName == 'superAdmin';
+
   useEffect(() => {
     const clickHandler = ({ target }) => {
       if (!sidebar.current || !trigger.current) return;
@@ -173,13 +174,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       superRole &&
         allLinks.push({
           id: 'role',
-    path: '/roles',
-    icon: <TbSubtask className="w-5 h-5" />,
-    text: 'Roles',
-    styleChecker: 'roles',
+          path: '/roles',
+          icon: <TbSubtask className="w-5 h-5" />,
+          text: 'Roles',
+          styleChecker: 'roles',
         });
     }
-    
+
     allLinks.push({
       id: 'cms_user',
       path: '/cms_users',
@@ -187,7 +188,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       text: 'Cms_Users',
       styleChecker: 'cms_users',
     });
-    
+
     allLinks.push({
       id: 'cms_manager',
       path: '/cms_managers',
@@ -195,7 +196,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       text: 'Cms_Managers',
       styleChecker: 'cms_managers',
     });
-  
 
     {
       adminRole &&
@@ -220,7 +220,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       }`}
     >
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-        <NavLink to="/" className="text-white font-black text-4xl tracking-widest flex w-full gap-2 items-center">
+        <NavLink
+          to="/"
+          className="text-white font-black text-4xl tracking-widest flex w-full gap-2 items-center"
+        >
           <img src={nxcwhite} alt="SOS Logo" className="w-22 h-24" /> CMS
         </NavLink>
 
@@ -245,7 +248,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 <NavLink
                   to="/dashboard"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('dashboard') && 'bg-graydark dark:bg-meta-4'
+                    pathname.includes('dashboard') &&
+                    'bg-graydark dark:bg-meta-4'
                   }`}
                 >
                   <MdOutlineDashboard className="w-5 h-5" /> Dashboard
@@ -256,7 +260,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   <NavLink
                     to={e.path}
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                      pathname.includes(e.styleChecker) && 'bg-graydark dark:bg-meta-4'
+                      pathname.includes(e.styleChecker) &&
+                      'bg-graydark dark:bg-meta-4'
                     }`}
                   >
                     {e.icon} {e.text}

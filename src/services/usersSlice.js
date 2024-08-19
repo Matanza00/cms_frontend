@@ -6,29 +6,29 @@ export const usersSlice = apiSlice.injectEndpoints({
     GetUserByCompanyId: builder.query({
       query: ({ companyId, page, limit, searchTerm }) => {
         if (searchTerm) {
-          return `/users/company/${companyId}?search=${searchTerm}&page=${page}&limit=${limit}`;
+          return `/c-users/company/${companyId}?search=${searchTerm}&page=${page}&limit=${limit}`;
         } else {
-          return `/users/company/${companyId}?page=${page}&limit=${limit}`;
+          return `/c-users/company/${companyId}?page=${page}&limit=${limit}`;
         }
       },
       providesTags: ['User'],
     }),
     // Get All User Info
     GetAllUsersInfo: builder.query({
-      query: () => '/users',
+      query: () => '/c-users',
       providesTags: ['User'],
     }),
 
     // Get One User
     GetUser: builder.query({
-      query: (userId) => `/users/${userId}`,
+      query: (userId) => `/c-users/${userId}`,
       providesTags: ['User'],
     }),
 
     // Add company users
     AddCompanyUser: builder.mutation({
       query: (formData) => ({
-        url: '/users',
+        url: '/c-users',
         method: 'POST',
         body: formData,
       }),
@@ -38,7 +38,7 @@ export const usersSlice = apiSlice.injectEndpoints({
     // Update Company User
     UpdateUser: builder.mutation({
       query: ({ userId, data }) => ({
-        url: `/users/${userId}`,
+        url: `/c-users/${userId}`,
         method: 'PATCH',
         body: data,
       }),
@@ -48,7 +48,7 @@ export const usersSlice = apiSlice.injectEndpoints({
     // Delete Company User
     DeleteUser: builder.mutation({
       query: (userId) => ({
-        url: `/users/${userId}`,
+        url: `/c-users/${userId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['User'],
@@ -57,7 +57,7 @@ export const usersSlice = apiSlice.injectEndpoints({
     // Get users by RoleId
     getUserByRoleId: builder.query({
       query: ({ roleId, station }) => {
-        let queryString = `/users/role/${roleId}`;
+        let queryString = `/c-users/role/${roleId}`;
         if (station) {
           queryString += `?station=${station}`;
         }
