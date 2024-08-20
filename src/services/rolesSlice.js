@@ -8,7 +8,7 @@ export const rolesSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get users by CompanyId
     GetRolesByCompanyId: builder.query({
-      query: (companyId) => `/roles/company/${companyId}`,
+      query: (companyId) => `/c-roles/company/${companyId}`,
       providesTags: ['Role'],
     }),
     GetRolesAndPermissionsByCompanyId: builder.query({

@@ -31,13 +31,6 @@ const links = [
     styleChecker: 'users',
   },
   {
-    id: 'cms_user',
-    path: '/cms_users',
-    icon: <HiUserGroup className="w-5 h-5" />,
-    text: 'cms_Users',
-    styleChecker: 'cms_users',
-  },
-  {
     id: 'role',
     path: '/roles',
     icon: <TbSubtask className="w-5 h-5" />,
@@ -45,60 +38,25 @@ const links = [
     styleChecker: 'roles',
   },
   {
-    id: 'driver',
-    path: '/drivers',
-    icon: <FaPeopleGroup className="w-5 h-5" />,
-    text: 'Drivers',
-    styleChecker: 'drivers',
+    id: 'cms_user',
+    path: '/cms_users',
+    icon: <HiUserGroup className="w-5 h-5" />,
+    text: 'cms_Users',
+    styleChecker: 'cms_users',
   },
   {
-    id: 'vehicle',
-    path: '/vehicles',
-    icon: <AiFillCar className="w-5 h-5" />,
-    text: 'Vehicles',
-    styleChecker: 'vehicles',
+    id: 'cms_manager',
+    path: '/cms_managers',
+    icon: <HiUserGroup className="w-5 h-5" />,
+    text: 'cms_Managers',
+    styleChecker: 'cms_managers',
   },
   {
-    id: 'vehicle_assigned',
-    path: '/vehicle-tagged',
-    icon: <RiBusWifiFill className="w-5 h-5" />,
-    text: 'Vehicles Assigned',
-    styleChecker: 'vehicle-tagged',
-  },
-  {
-    id: 'fuel',
-    path: '/fuel-management',
-    icon: <BsFillFuelPumpFill className="w-5 h-5" />,
-    text: 'Fuel Management',
-    styleChecker: 'fuel-management',
-  },
-  {
-    id: 'periodic',
-    path: '/periodic',
-    icon: <GiAutoRepair className="w-6 h-6" />,
-    text: 'Periodic Maintenance',
-    styleChecker: 'periodic',
-  },
-  {
-    id: 'daily',
-    path: '/daily',
-    icon: <FaClockRotateLeft className="w-5 h-5" />,
-    text: 'Daily Maintenance',
-    styleChecker: 'daily',
-  },
-  {
-    id: 'emergencyMnt',
-    path: '/Emergency-Maintenance',
-    icon: <TbSettingsExclamation className="w-5 h-5" />,
-    text: 'Emerg Maintenance',
-    styleChecker: 'emergencyMnt',
-  },
-  {
-    id: 'dailyMaintenance',
-    path: '/daily-maintenance',
-    icon: <GiAutoRepair className="w-5 h-5" />,
-    text: 'Daily Maintenance',
-    styleChecker: 'dailyMaintenance',
+    id: 'cms_clinic',
+    path: '/cms_clinics',
+    icon: <HiUserGroup className="w-5 h-5" />,
+    text: 'cms_Clinics',
+    styleChecker: 'cms_clinics',
   },
 ];
 
@@ -195,6 +153,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       icon: <HiUserGroup className="w-5 h-5" />,
       text: 'Cms_Managers',
       styleChecker: 'cms_managers',
+    });
+    allLinks.push({
+      id: 'cms_clinic',
+      path: '/cms_clinics',
+      icon: <HiUserGroup className="w-5 h-5" />,
+      text: 'cms_Clinics',
+      styleChecker: 'cms_clinics',
     });
 
     {

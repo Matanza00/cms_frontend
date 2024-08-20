@@ -32,6 +32,9 @@ import Cms_UserView from './pages/cms_Users/UsersView';
 import Managers from './pages/cms_Managers/index';
 import cms_ManagersAddForm from './pages/cms_Managers/ManagerAddForm';
 import ManagersAddForm from './pages/cms_Managers/ManagerAddForm';
+import Clinics from './pages/cms_Clinic/index';
+import ClinicAddForm from './pages/cms_Clinic/ClinicAddForm';
+import ClinicTable from './pages/cms_Clinic/ClinicTable';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -83,6 +86,8 @@ function App() {
         <Route path="/cms_users/update/:id" element={<Cms_UserUpdateForm />} />
         <Route path="/cms_managers" element={<Managers />} />
         <Route path="/cms_managers/add" element={<ManagersAddForm />} />
+        <Route path="/cms_clinics" element={<Clinics />} />
+        <Route path="/cms_clinics/add" element={<ClinicAddForm />} />
         {/*  <Route path="/cms_managers/update/:id" element={<ManagersUpdateForm />} />
         <Route path="/cms_managers/view/:id" element={<ManagerView />} />  */}
 

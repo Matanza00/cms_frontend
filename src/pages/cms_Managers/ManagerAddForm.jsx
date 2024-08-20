@@ -142,37 +142,6 @@ const ManagersAddForm = () => {
                   <div className="w-full sm:w-1/2">
                     <label
                       className="mb-3 block text-md font-medium text-black dark:text-white"
-                      htmlFor="employeeId"
-                    >
-                      Station
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-4.5 top-4">
-                        <FiUser />
-                      </span>
-                      <Select
-                        styles={customStyles}
-                        className="w-full rounded border border-stroke bg-gray h-[50px] text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                        options={stationOptions}
-                        value={
-                          formValues.station
-                            ? {
-                                value: formValues.station,
-                                label: formValues.station,
-                              }
-                            : null
-                        }
-                        onChange={(selectedOption) =>
-                          handleChange(selectedOption, 'station')
-                        }
-                        placeholder="Select Station"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="w-full sm:w-1/2">
-                    <label
-                      className="mb-3 block text-md font-medium text-black dark:text-white"
                       htmlFor=""
                     >
                       Select Manager
@@ -195,6 +164,37 @@ const ManagersAddForm = () => {
                       />
                     </div>
                   </div>
+
+                  <div className="w-full sm:w-1/2">
+                    <label
+                      className="mb-3 block text-md font-medium text-black dark:text-white"
+                      htmlFor="employeeId"
+                    >
+                      Clinic
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-4.5 top-4">
+                        <FiUser />
+                      </span>
+                      <Select
+                        styles={customStyles}
+                        className="w-full rounded border border-stroke bg-gray h-[50px] text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                        options={stationOptions}
+                        value={
+                          formValues.clinic
+                            ? {
+                                value: formValues.clinic,
+                                label: formValues.clinic,
+                              }
+                            : null
+                        }
+                        onChange={(selectedOption) =>
+                          handleChange(selectedOption, 'clinic')
+                        }
+                        placeholder="Select Clinic"
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                   <div className="w-full sm:w-1/2">
@@ -202,7 +202,7 @@ const ManagersAddForm = () => {
                       className="mb-3 block text-md font-medium text-black dark:text-white"
                       htmlFor="phoneNumber"
                     >
-                      License
+                      Provider
                     </label>
                     <div className="relative">
                       <span className="absolute left-4.5 top-4">
@@ -214,41 +214,17 @@ const ManagersAddForm = () => {
                         className="w-full rounded border border-stroke bg-gray h-[50px] text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         options={licenseOptions}
                         value={
-                          formValues.licenseType
+                          formValues.provider
                             ? {
-                                value: formValues.licenseType,
-                                label: formValues.licenseType,
+                                value: formValues.provider,
+                                label: formValues.provider,
                               }
                             : null
                         }
                         onChange={(selectedOption) =>
-                          handleChange(selectedOption, 'licenseType')
+                          handleChange(selectedOption, 'Provider')
                         }
-                        placeholder="Select License Type"
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full sm:w-1/2 md:w-1/2 lg:1/2">
-                    <label
-                      className="mb-3 block text-md font-medium text-black dark:text-white"
-                      htmlFor="joining_date_id"
-                    >
-                      Joining Date
-                    </label>
-                    <div className="relative">
-                      <input
-                        className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                        type="date"
-                        name="joining_date"
-                        id="joining_date_id"
-                        placeholder="20/12/2024"
-                        onChange={(e) =>
-                          setFormValues({
-                            ...formValues,
-                            joiningDate: e.target.value,
-                          })
-                        }
-                        value={formValues.joiningDate}
+                        placeholder="Select Provider..."
                       />
                     </div>
                   </div>

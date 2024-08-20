@@ -60,10 +60,14 @@ export const addClinicSchema = {
   email: '',
   url: '',
   contactName: '',
+  contactPhone: '',
   contactCell: '',
-  contactAddr: '',
+  contactAddress: '',
   contactEmail: '',
   contactPager: '',
+  license: '',
+  assignedEmployee: '',
+  name: '',
 };
 
 export const addProviderSchema = {

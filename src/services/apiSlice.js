@@ -33,9 +33,10 @@ export const apiSlice = createApi({
     'MaintenanceTeam',
     'Emergency',
     'Manager', // Added for manager related queries
+    'Clinic', // Added for clinic related queries
   ],
   endpoints: (builder) => ({
-    // No need to define endpoints here as they are defined in managerSlice
+    // No need to define endpoints here as they are defined in managerSlice &&  clinicSlice
   }),
 });
 
