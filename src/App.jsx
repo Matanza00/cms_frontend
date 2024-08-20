@@ -35,6 +35,7 @@ import ManagersAddForm from './pages/cms_Managers/ManagerAddForm';
 import Clinics from './pages/cms_Clinic/index';
 import ClinicAddForm from './pages/cms_Clinic/ClinicAddForm';
 import ClinicTable from './pages/cms_Clinic/ClinicTable';
+import ClinicView from './pages/cms_Clinic/ClinicView';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -88,6 +89,7 @@ function App() {
         <Route path="/cms_managers/add" element={<ManagersAddForm />} />
         <Route path="/cms_clinics" element={<Clinics />} />
         <Route path="/cms_clinics/add" element={<ClinicAddForm />} />
+        <Route path="/cms_clinics/view/:id" element={<ClinicView />} />
         {/*  <Route path="/cms_managers/update/:id" element={<ManagersUpdateForm />} />
         <Route path="/cms_managers/view/:id" element={<ManagerView />} />  */}
 

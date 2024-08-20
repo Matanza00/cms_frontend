@@ -34,7 +34,7 @@ const clinicSlice = apiSlice.injectEndpoints({
 
     addClinic: builder.mutation({
       query: (formData) => ({
-        url: '/c-clinics',
+        url: '/c-clinics/',
         method: 'POST',
         body: formData,
       }),

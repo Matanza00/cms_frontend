@@ -2,122 +2,106 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { FiUser } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import useToast from '../../hooks/useToast';
 import LoadingButton from '../../components/LoadingButton';
-import { addClinicSchema } from '../../utils/schemas';
 import Select from 'react-select';
 import UploadWidget from '../../components/UploadWidget';
 import {
   useAddClinicMutation,
   useGetAllClinicsWithoutPaginationQuery,
 } from '../../services/clinicSlice';
-import { useGetCompanyEmployeesQuery } from '../../services/employeeSlice';
-import AsyncSelect from 'react-select/async';
-import { stationOptions, licenseOptions } from '../../constants/Data';
+import { useGetAllUsersInfoQuery } from '../../services/usersSlice'; // Import the query hook
 import { customStyles } from '../../constants/Styles';
 import BreadcrumbNav from '../../components/Breadcrumbs/BreadcrumbNav';
+// import { addClinicSchema } from '../../utils/schemas';
 
 const ClinicAddForm = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const { showErrorToast, showSuccessToast } = useToast();
-  const [selectedRole, setSelectedRole] = useState(null);
-  const [formValues, setFormValues] = useState({ ...addClinicSchema });
-  const { data: employees, isLoading: employeeLoading } =
-    useGetCompanyEmployeesQuery(user?.companyId);
+  const [formValues, setFormValues] = useState({
+    cms_UsersId: '',
+    name: '',
+    companyId: user?.companyId || '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: '',
+    phone: '',
+    cell: '',
+    faxNo: '',
+    email: '',
+    url: '',
+    assignedEmployee: '',
+  });
+
+  const { data: responseData, isLoading: usersLoading } =
+    useGetAllUsersInfoQuery(); // Fetch all users
   const { data: clinics } = useGetAllClinicsWithoutPaginationQuery({
     companyId: user?.companyId,
-    station: formValues?.station,
   });
 
   const [AddClinic, { isLoading, isError, error }] = useAddClinicMutation();
-
-  const [clinicCnicUrl, setClinicCnicUrl] = useState('');
   const [clinicLicenceUrl, setClinicLicenceUrl] = useState('');
-  const [clinicMedicalCertificateUrl, setClinicMedicalCertificateUrl] =
-    useState('');
 
   useEffect(() => {
-    setFormValues({
-      ...formValues,
-      cnic: clinicCnicUrl,
-      license: clinicLicenceUrl,
-      medicalCertificate: clinicMedicalCertificateUrl,
-    });
-  }, [clinicCnicUrl, clinicLicenceUrl, clinicMedicalCertificateUrl]);
-
-  useEffect(() => {
-    setFormValues({ ...formValues, companyId: user?.companyId });
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      companyId: user?.companyId,
+      cms_UsersId: user?.id || '',
+    }));
   }, [user]);
 
-  const loadOptions = (inputValue, callback) => {
-    if (!inputValue) {
-      callback([]);
-      return;
-    }
+  // useEffect(() => {
+  //   setFormValues((prevValues) => ({
+  //     ...prevValues,
+  //     license: clinicLicenceUrl,
+  //   }));
+  // }, [clinicLicenceUrl]);
 
-    if (employees && employees.data) {
-      const filteredOptions = employees.data
-        .filter((employee) =>
-          employee.name.toLowerCase().includes(inputValue.toLowerCase()),
-        )
-        .map((employee) => ({
-          value: employee.id,
-          label: `${employee.erpNumber}-${employee.name}`,
-        }));
-      callback(filteredOptions);
+  const handleSelectChange = (selectedOption) => {
+    if (selectedOption) {
+      setFormValues({
+        ...formValues,
+        assignedEmployee: selectedOption.value,
+        name: selectedOption.label,
+      });
     }
-  };
-
-  const handleChange = (selectedOption, name) => {
-    setFormValues({
-      ...formValues,
-      [name]: selectedOption.value, // Update with the selected value
-    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = {
-      ...formValues,
-    };
     try {
-      await AddClinic(formData).unwrap();
+      const result = await AddClinic(formValues).unwrap();
+      console.log('API Response:', result);
       showSuccessToast('Clinic Added Successfully!');
       navigate(-1);
     } catch (err) {
-      console.log(err);
+      console.error('Error:', err);
       let errorMessage = 'An error has occurred while adding Clinic';
-      if (err?.data?.error?.details.length > 0) {
-        errorMessage = err?.data?.error?.details
+      if (err?.data?.error?.details?.length > 0) {
+        errorMessage = err.data.error.details
           .map((detail) => detail.message)
           .join(', ');
-      } else if (!!err?.data?.message) {
-        errorMessage = err?.data?.message;
+      } else if (err?.data?.message) {
+        errorMessage = err.data.message;
       }
-      console.log('!!!', errorMessage);
-
       showErrorToast(errorMessage);
     }
   };
 
-  const handleSelectChange = (selectedOption) => {
-    console.log(selectedOption.label);
-    if (selectedOption) {
-      console.log('Selected option label:', selectedOption.label);
-      setFormValues({
-        ...formValues,
-        name: selectedOption.label,
-        employeeId: selectedOption.label?.split('-')[0],
-      });
-    } else {
-      console.log('No option selected');
-    }
-  };
+  // Access the 'data' property from responseData
+  const users = responseData?.data || [];
 
-  console.log('object', formValues);
+  // Ensure that `users` is an array
+  const userOptions = Array.isArray(users)
+    ? users.map((user) => ({
+        value: user.id, // Assuming 'id' is the unique identifier for each user
+        label: user.username, // Displaying username in the dropdown
+      }))
+    : [];
 
   return (
     <DefaultLayout>
@@ -125,7 +109,7 @@ const ClinicAddForm = () => {
         <BreadcrumbNav
           pageName="Add Clinic"
           pageNameprev="Clinics"
-          pagePrevPath="Clinics"
+          pagePrevPath="/clinics"
         />
         <div className="gap-8">
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -138,34 +122,29 @@ const ClinicAddForm = () => {
               <form onSubmit={handleSubmit}>
                 <section className="mb-8">
                   <h4 className="font-semibold text-lg text-black dark:text-white mb-4">
-                    Account Information
+                    Clinic Information
                   </h4>
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div>
                       <label className="block text-md font-medium text-black dark:text-white mb-2">
-                        System ID
+                        Clinic ID
                       </label>
                       <input
                         type="text"
-                        value="101021" // Hardcoded value for System ID
+                        value={formValues.clinicId || 'N/A'}
                         className="w-full border rounded p-2 dark:border-strokedark dark:bg-meta-4"
                         disabled
                       />
                     </div>
                     <div>
                       <label className="block text-md font-medium text-black dark:text-white mb-2">
-                        Account ID
+                        User ID
                       </label>
                       <input
                         type="text"
-                        value={formValues.accountId || ''}
-                        onChange={(e) =>
-                          setFormValues({
-                            ...formValues,
-                            accountId: e.target.value,
-                          })
-                        }
+                        value={formValues.cms_UsersId || ''}
                         className="w-full border rounded p-2 dark:border-strokedark dark:bg-meta-4"
+                        disabled
                       />
                     </div>
                     <div>
@@ -183,7 +162,6 @@ const ClinicAddForm = () => {
                     </div>
                   </div>
                 </section>
-
                 <section className="mb-8">
                   <h4 className="font-semibold text-lg text-black dark:text-white mb-4">
                     Contact Information
@@ -268,7 +246,7 @@ const ClinicAddForm = () => {
                     </div>
                     <div>
                       <label className="block text-md font-medium text-black dark:text-white mb-2">
-                        Phone Number
+                        Phone
                       </label>
                       <input
                         type="text"
@@ -282,89 +260,107 @@ const ClinicAddForm = () => {
                         className="w-full border rounded p-2 dark:border-strokedark dark:bg-meta-4"
                       />
                     </div>
+                    <div>
+                      <label className="block text-md font-medium text-black dark:text-white mb-2">
+                        Cell
+                      </label>
+                      <input
+                        type="text"
+                        value={formValues.cell || ''}
+                        onChange={(e) =>
+                          setFormValues({ ...formValues, cell: e.target.value })
+                        }
+                        className="w-full border rounded p-2 dark:border-strokedark dark:bg-meta-4"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-md font-medium text-black dark:text-white mb-2">
+                        Fax No
+                      </label>
+                      <input
+                        type="text"
+                        value={formValues.faxNo || ''}
+                        onChange={(e) =>
+                          setFormValues({
+                            ...formValues,
+                            faxNo: e.target.value,
+                          })
+                        }
+                        className="w-full border rounded p-2 dark:border-strokedark dark:bg-meta-4"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-md font-medium text-black dark:text-white mb-2">
+                        Email
+                      </label>
+                      <input
+                        type="text"
+                        value={formValues.email || ''}
+                        onChange={(e) =>
+                          setFormValues({
+                            ...formValues,
+                            email: e.target.value,
+                          })
+                        }
+                        className="w-full border rounded p-2 dark:border-strokedark dark:bg-meta-4"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-md font-medium text-black dark:text-white mb-2">
+                        URL
+                      </label>
+                      <input
+                        type="text"
+                        value={formValues.url || ''}
+                        onChange={(e) =>
+                          setFormValues({
+                            ...formValues,
+                            url: e.target.value,
+                          })
+                        }
+                        className="w-full border rounded p-2 dark:border-strokedark dark:bg-meta-4"
+                      />
+                    </div>
                   </div>
                 </section>
-
                 <section className="mb-8">
                   <h4 className="font-semibold text-lg text-black dark:text-white mb-4">
-                    Clinic Documents
+                    Documents
                   </h4>
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div>
-                      <label className="block text-md font-medium text-black dark:text-white mb-2">
-                        Clinic License
-                      </label>
-                      <UploadWidget
-                        setImage={setClinicLicenceUrl}
-                        image={clinicLicenceUrl}
-                      />
-                    </div>
+                  <div className="mb-4">
+                    <label className="block text-md font-medium text-black dark:text-white mb-2">
+                      Clinic License
+                    </label>
+                    <UploadWidget setFileUrl={setClinicLicenceUrl} />
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Upload the clinic's license here.
+                    </p>
                   </div>
                 </section>
-
                 <section className="mb-8">
                   <h4 className="font-semibold text-lg text-black dark:text-white mb-4">
-                    Clinic Details
+                    Assign Employee
                   </h4>
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div>
-                      <label className="block text-md font-medium text-black dark:text-white mb-2">
-                        Station
-                      </label>
-                      <Select
-                        options={stationOptions}
-                        styles={customStyles}
-                        onChange={(e) =>
-                          setFormValues({ ...formValues, station: e.value })
-                        }
-                        value={stationOptions.find(
-                          (option) => option.value === formValues.station,
-                        )}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-md font-medium text-black dark:text-white mb-2">
-                        License Type
-                      </label>
-                      <Select
-                        options={licenseOptions}
-                        styles={customStyles}
-                        onChange={(e) =>
-                          setFormValues({ ...formValues, licenseType: e.value })
-                        }
-                        value={licenseOptions.find(
-                          (option) => option.value === formValues.licenseType,
-                        )}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-md font-medium text-black dark:text-white mb-2">
-                        Assigned Employee
-                      </label>
-                      <AsyncSelect
-                        cacheOptions
-                        loadOptions={loadOptions}
-                        onChange={(selectedOption) =>
-                          handleSelectChange(selectedOption)
-                        }
-                        placeholder="Select an Employee"
-                      />
-                    </div>
-                  </div>
+                  <Select
+                    options={userOptions}
+                    onChange={handleSelectChange}
+                    styles={customStyles}
+                    isLoading={usersLoading}
+                    placeholder="Select Employee"
+                    value={
+                      userOptions.find(
+                        (option) =>
+                          option.value === formValues.assignedEmployee,
+                      ) || null
+                    }
+                  />
                 </section>
-
-                <div className="flex justify-end gap-4">
-                  <button
-                    type="button"
-                    onClick={() => navigate(-1)}
-                    className="px-4 py-2 border rounded bg-gray-300 text-gray-800"
-                  >
-                    Cancel
-                  </button>
+                <div className="flex justify-end">
                   <LoadingButton
-                    isLoading={isLoading}
                     type="submit"
-                    className="px-4 py-2 border rounded bg-blue-500 text-white"
+                    isLoading={isLoading}
+                    loadingText="Saving..."
+                    color="primary"
                   >
                     Save Clinic
                   </LoadingButton>

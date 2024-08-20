@@ -48,7 +48,9 @@ export const addCmsUserSchema = {
 
 export const addClinicSchema = {
   clinicId: '',
-  companyId: '',
+  cms_UserId: '',
+  name: '',
+  companyId: '', // Required
   address: '',
   city: '',
   state: '',
@@ -59,15 +61,14 @@ export const addClinicSchema = {
   faxNo: '',
   email: '',
   url: '',
-  contactName: '',
-  contactPhone: '',
-  contactCell: '',
-  contactAddress: '',
-  contactEmail: '',
-  contactPager: '',
-  license: '',
+  license: null,
   assignedEmployee: '',
-  name: '',
+  // contactName: '', // Uncomment if needed
+  // contactPhone: '', // Uncomment if needed
+  // contactCell: '', // Uncomment if needed
+  // contactAddress: '', // Uncomment if needed
+  // contactEmail: '', // Uncomment if needed
+  // contactPager: '', // Uncomment if needed
 };
 
 export const addProviderSchema = {

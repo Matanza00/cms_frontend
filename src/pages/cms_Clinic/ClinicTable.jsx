@@ -1,26 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
-import { IoEyeOutline } from 'react-icons/io5';
-import { CiEdit } from 'react-icons/ci';
-import { RiDeleteBinLine } from 'react-icons/ri';
-import { GrNext, GrPrevious } from 'react-icons/gr';
 import { useSelector } from 'react-redux';
 import useToast from '../../hooks/useToast';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import CONSTANTS from '../../utils/constants';
 import {
-  useGetClinicsByCompanyIdQuery,
-  useGetAllClinicsWithoutPaginationQuery,
+  useGetAllClinicsQuery,
   useDeleteClinicMutation,
 } from '../../services/clinicSlice';
 import DeleteModal from '../../components/DeleteModal';
 import Loader from '../../common/Loader';
 import PaginationComponent from '../../components/Pagination/Pagination';
-
-// import ReactHTMLTableToExcel from 'react-html-table-to-excel';
-import html2canvas from 'html2canvas';
-// import htmlDocx from 'html-docx-js';
 
 const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
   const navigate = useNavigate();
@@ -42,7 +31,7 @@ const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
     error,
     isLoading: isClinicLoading,
     refetch,
-  } = useGetAllClinicsWithoutPaginationQuery({
+  } = useGetAllClinicsQuery({
     companyId: user?.companyId,
     page,
     limit,
@@ -55,7 +44,7 @@ const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
   useEffect(() => {
     setPage(1);
     refetch();
-  }, [searchTerm, sortBy, sortOrder]);
+  }, [searchTerm, sortBy, sortOrder, user?.companyId]);
 
   const handleSort = (field) => {
     if (sortBy === field) {
@@ -79,9 +68,9 @@ const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
 
     setSortedData(d);
     setSortedDataIndex(d);
-  }, [data]);
+  }, [data, sortBy, sortOrder]);
 
-  if (isClinicsLoading) return <Loader />;
+  if (isClinicLoading) return <Loader />;
   if (isError) return <div>Error occurred while fetching Clinics.</div>;
   if (!sortedData?.length)
     return (
@@ -91,6 +80,7 @@ const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
         </center>
       </div>
     );
+
   return (
     <>
       <div
@@ -103,12 +93,12 @@ const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
                 <th
                   className="w-auto flex-1 py-4 px-4 text-black dark:text-white cursor-pointer"
-                  onClick={() => handleSort('id')}
+                  onClick={() => handleSort('clinicId')}
                 >
                   <span className="flex items-center">
-                    ID{' '}
+                    Clinic ID{' '}
                     <span className="ml-1">
-                      {sortBy === 'id' ? (
+                      {sortBy === 'clinicId' ? (
                         sortOrder === 'asc' ? (
                           <FaSortUp />
                         ) : (
@@ -122,12 +112,12 @@ const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
                 </th>
                 <th
                   className="w-auto flex-1 py-4 px-3 text-black dark:text-white cursor-pointer"
-                  onClick={() => handleSort('employeeId')}
+                  onClick={() => handleSort('address')}
                 >
                   <span className="flex items-center">
-                    Employee Id{' '}
+                    Address{' '}
                     <span className="ml-1">
-                      {sortBy === 'employeeId' ? (
+                      {sortBy === 'address' ? (
                         sortOrder === 'asc' ? (
                           <FaSortUp />
                         ) : (
@@ -141,12 +131,12 @@ const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
                 </th>
                 <th
                   className="w-auto flex-1 py-4 px-3 text-black dark:text-white cursor-pointer"
-                  onClick={() => handleSort('name')}
+                  onClick={() => handleSort('phone')}
                 >
                   <span className="flex items-center">
-                    Clinic Name{' '}
+                    Phone{' '}
                     <span className="ml-1">
-                      {sortBy === 'name' ? (
+                      {sortBy === 'phone' ? (
                         sortOrder === 'asc' ? (
                           <FaSortUp />
                         ) : (
@@ -160,12 +150,12 @@ const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
                 </th>
                 <th
                   className="w-auto flex-1 py-4 px-3 text-black dark:text-white cursor-pointer"
-                  onClick={() => handleSort('joiningDate')}
+                  onClick={() => handleSort('assignedEmployee')}
                 >
                   <span className="flex items-center">
-                    Joining Date{' '}
+                    Assigned Employee{' '}
                     <span className="ml-1">
-                      {sortBy === 'joiningDate' ? (
+                      {sortBy === 'assignedEmployee' ? (
                         sortOrder === 'asc' ? (
                           <FaSortUp />
                         ) : (
@@ -179,12 +169,12 @@ const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
                 </th>
                 <th
                   className="w-auto flex-1 py-4 px-3 text-black dark:text-white cursor-pointer"
-                  onClick={() => handleSort('station')}
+                  onClick={() => handleSort('createdAt')}
                 >
                   <span className="flex items-center">
-                    Station{' '}
+                    Created At{' '}
                     <span className="ml-1">
-                      {sortBy === 'station' ? (
+                      {sortBy === 'createdAt' ? (
                         sortOrder === 'asc' ? (
                           <FaSortUp />
                         ) : (
@@ -210,26 +200,24 @@ const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
                       {e?.id}
                     </p>
                   </td>
-
                   <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark">
                     <p className="font-medium text-black dark:text-white">
-                      {e?.employeeId}
+                      {e?.address}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark">
                     <p className="font-medium text-black dark:text-white">
-                      {e?.name}
+                      {e?.phone}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark">
                     <p className="font-medium text-black dark:text-white">
-                      {e?.joiningDate.slice(0, 10)}
+                      {e?.assignedEmployee}
                     </p>
                   </td>
-
                   <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark">
                     <p className="font-medium text-black dark:text-white">
-                      {e.station}
+                      {new Date(e?.createdAt).toLocaleDateString()}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -240,6 +228,7 @@ const ClinicTable = ({ searchTerm, setSortedDataIndex }) => {
                       >
                         View
                       </button>
+                      {/* Other action buttons */}
                     </div>
                   </td>
                 </tr>
